@@ -3,7 +3,6 @@ project(courseProject_pea2)
 
 SET(CMAKE_CXX_STANDARD 17)
 
-
 set(SOURCE_FILES
         AlgorithmTest.cpp
         AlgorithmTest.h

@@ -224,9 +224,9 @@ void TravellingSalesmanProblem::PrintSolution() {
     std::cout << "\e[1mSolution\e[0m" << std::endl;
     if (whichTypeOfAlgorithm == "brute_force") {
         std::cout << "\e[1mFull Search Algorithm\e[0m" << std::endl;
-    } else if (whichTypeOfAlgorithm == "brute_force") {
-        std::cout << "\e[1mBranch and Bound Algorithm\e[0m" << std::endl;
     } else if (whichTypeOfAlgorithm == "branch_and_bound") {
+        std::cout << "\e[1mBranch and Bound Algorithm\e[0m" << std::endl;
+    } else if (whichTypeOfAlgorithm == "tabu_search") {
         std::cout << "\e[1mTabu Search Algorithm\e[0m" << std::endl;
     }
 

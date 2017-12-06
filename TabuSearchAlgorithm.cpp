@@ -16,7 +16,3 @@ TabuSearchAlgorithm::~TabuSearchAlgorithm() {
 void TabuSearchAlgorithm::DoCalculations() {
     // TODO Tabu Search Algorithm
 }
-
-std::pair<std::vector<int>, int> TabuSearchAlgorithm::GetResults() {
-    return std::make_pair(optimalWay, length);
-}
