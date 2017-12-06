@@ -5,6 +5,7 @@
 #ifndef COURSEPROJECT_SDZ3_TSPLIB_PARSER_H
 #define COURSEPROJECT_SDZ3_TSPLIB_PARSER_H
 
+
 #include <vector>
 #include <string>
 
@@ -49,9 +50,10 @@ public:
 
     void LowerDiagRowMatrix();
 
-    TSPLIB_Parser(std::string path);
+    explicit TSPLIB_Parser(std::string path);
 
     ~TSPLIB_Parser();
 };
+
 
 #endif //COURSEPROJECT_SDZ3_TSPLIB_PARSER_H

@@ -82,7 +82,7 @@ bool TSPLIB_Parser::checkParameter(std::string keyword, std::string value) {
             this->type = value;
         } else {
             std::cout << "Parametr - " << keyword << " - " << value << " jest niewspierany." << std::endl;
-            return 0;
+            return false;
         }
     } else if (keyword == "COMMENT") {}
     else if (keyword == "DIMENSION")
@@ -96,7 +96,7 @@ bool TSPLIB_Parser::checkParameter(std::string keyword, std::string value) {
             this->edgeWeightFormat = value;
         else {
             std::cout << "Parametr " << keyword << " - " << value << " jest niewspierany." << std::endl;
-            return 0;
+            return false;
         }
     } else if (keyword == "EDGE_WEIGHT_FORMAT") {
         if ((value == "FULL_MATRIX") ||
@@ -111,7 +111,7 @@ bool TSPLIB_Parser::checkParameter(std::string keyword, std::string value) {
             this->edgeWeightFormat = value;
         else {
             std::cout << "Parametr " << keyword << " - " << value << " jest niewspierany." << std::endl;
-            return 0;
+            return false;
         }
     } else if (keyword == "DISPLAY_DATA_TYPE") {
 

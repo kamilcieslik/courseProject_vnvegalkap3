@@ -14,6 +14,7 @@ void displayMenu(const std::string &info) //Menu dla problemu komiwojażera.
     std::cout << "4. Wyświetl informacje o danych wejściowych problemu." << std::endl;
     std::cout << "5. Algorytm - przeszukiwanie zupełne." << std::endl;
     std::cout << "6. Algorytm - metoda podziału i ograniczeń." << std::endl;
+    std::cout << "7. Algorytm - algorytm z zakazami." << std::endl;
     std::cout << "0. Powrót do menu." << std::endl;
     std::cout << "Podaj opcje: ";
 }
@@ -74,7 +75,7 @@ void menu_travelling_salesman_problem() //Obsługa problemu komiwojażera.
                 try {
                     TimeMeasurement t;
                     t.TimeStart();
-                    s.BruteForceAlgorithm();
+                    s.PerformBruteForceAlgorithm();
                     t.TimeStop();
                     s.PrintCitiesForTheTravellingSalesman(false);
                     std::cout << std::endl;
@@ -92,7 +93,25 @@ void menu_travelling_salesman_problem() //Obsługa problemu komiwojażera.
                 try {
                     TimeMeasurement t;
                     t.TimeStart();
-                    s.BranchAndBoundAlgorithm();
+                    s.PerformBranchAndBoundAlgorithm();
+                    t.TimeStop();
+                    s.PrintCitiesForTheTravellingSalesman(false);
+                    std::cout << std::endl;
+                    s.PrintSolution();
+                    std::cout.setf(std::ios::fixed, std::ios::floatfield);
+                    std::cout.setf(std::ios::showpoint);
+                    std::cout << "Time\t= " << t.GetTimeInSeconds() << " s" << std::endl << std::endl;
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
+                break;
+
+            case 7: //Algorytm 3. - algorytm z zakazami.
+                try {
+                    TimeMeasurement t;
+                    t.TimeStart();
+                    s.PerformTabuSearchAlgorithm();
                     t.TimeStop();
                     s.PrintCitiesForTheTravellingSalesman(false);
                     std::cout << std::endl;

@@ -37,7 +37,7 @@ void AlgorithmTest::TravellingSalesmanProblem_Test_BruteForce(int numberOfRepeti
         for (auto j = 0; j < numberOfRepetitions; j++) {
             s.GenerateRandomCities(amountOfCities, 99);
             t.TimeStart();
-            s.BruteForceAlgorithm();
+            s.PerformBruteForceAlgorithm();
             t.TimeStop();
             sum += t.GetTimeInSeconds();
         }
@@ -95,13 +95,13 @@ void AlgorithmTest::TravellingSalesmanProblem_Test_BranchAndBound(int numberOfRe
             s.LoadArrayOfMatrixOfCities(parser.GetArrayOfMatrixCities(), parser.GetDimension(),
                                         parser.GetFileName(), parser.GetGraphType());
             t.TimeStart();
-            s.BranchAndBoundAlgorithm();
+            s.PerformBranchAndBoundAlgorithm();
             t.TimeStop();
             sum += t.GetTimeInSeconds();
         }
         sum = sum / numberOfRepetitions;
         results.push_back(sum);
-        results.push_back(s.GetTourLength("branchandbound"));
+        results.push_back(s.GetTourLength());
 
         std::cout << "." << std::endl << std::endl;
 

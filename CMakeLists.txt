@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 3.9.1)
 project(courseProject_pea2)
 
 SET(CMAKE_CXX_STANDARD 17)
-SET(CMAKE_CXX_FLAGS_RELEASE "-fno-rtti -O2")
-SET(CMAKE_CXX_FLAGS_DEBUG "-fno-rtti -O2")
+
 
 set(SOURCE_FILES
         AlgorithmTest.cpp
@@ -13,6 +12,6 @@ set(SOURCE_FILES
         TimeMeasurement.h
         TravellingSalesmanProblem.cpp
         TravellingSalesmanProblem.h
-        TSPLIB_Parser.cpp TSPLIB_Parser.h)
+        TSPLIB_Parser.cpp TSPLIB_Parser.h BranchAndBoundAlgorithm.cpp BranchAndBoundAlgorithm.h BruteForceAlgorithm.cpp BruteForceAlgorithm.h TabuSearchAlgorithm.cpp TabuSearchAlgorithm.h)
 
 add_executable(courseProject_pea2 ${SOURCE_FILES})
