@@ -189,6 +189,7 @@ void TravellingSalesmanProblem::PerformBruteForceAlgorithm() {
         throw std::logic_error("Brak miast do przeprowadzenia algorytmu problemu komiwojażera.");
 
     whichTypeOfAlgorithm = "brute_force";
+    optimalWay.clear();
 
     BruteForceAlgorithm algorithm(matrixOfCities, amountOfCities);
     algorithm.DoCalculations();
@@ -201,6 +202,7 @@ void TravellingSalesmanProblem::PerformBranchAndBoundAlgorithm() {
         throw std::logic_error("Brak miast do przeprowadzenia algorytmu problemu komiwojażera.");
 
     whichTypeOfAlgorithm = "branch_and_bound";
+    optimalWay.clear();
 
     BranchAndBoundAlgorithm algorithm(matrixOfCities, amountOfCities);
     algorithm.DoCalculations();
@@ -213,6 +215,7 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm() {
         throw std::logic_error("Brak miast do przeprowadzenia algorytmu problemu komiwojażera.");
 
     whichTypeOfAlgorithm = "tabu_search";
+    optimalWay.clear();
 
     TabuSearchAlgorithm algorithm(matrixOfCities, amountOfCities);
     algorithm.DoCalculations();
@@ -234,19 +237,22 @@ void TravellingSalesmanProblem::PrintSolution() {
     std::cout << "Length\t= " << optimalLength << std::endl;
     std::cout << "Path\t= ";
 
-    if (whichTypeOfAlgorithm == "branch_and_bound") {
+    if (whichTypeOfAlgorithm == "brute_force") {
         for (auto i = 0; i < amountOfCities; i++) {
             std::cout << optimalWay[i] << " - ";
         }
-    } else if (whichTypeOfAlgorithm == "brute_force") {
+        std::cout << optimalWay[0] << std::endl;
+    } else if (whichTypeOfAlgorithm == "branch_and_bound") {
         for (auto i = 0; i < amountOfCities; i++) {
-            std::cout << optimalWay[i] - 1 << " - ";
+            std::cout << optimalWay[i] -1 << " - ";
         }
+        std::cout << optimalWay[0] - 1 << std::endl;
     } else if (whichTypeOfAlgorithm == "tabu_search") {
-        // TODO Tabu Search Algorithm
+        for (auto i = 0; i < amountOfCities; i++) {
+            std::cout << optimalWay[i] << " - ";
+        }
+        std::cout << optimalWay[0] << std::endl;
     }
-
-    std::cout << "0" << std::endl;
 }
 
 int TravellingSalesmanProblem::GetTourLength() {
