@@ -4,19 +4,20 @@
 
 #include <algorithm>
 #include <random>
+#include <climits>
 #include "TabuSearchAlgorithm.h"
 
 TabuSearchAlgorithm::TabuSearchAlgorithm(int **matrixOfCities, int amountOfCities) : matrixOfCities(matrixOfCities),
                                                                                      amountOfCities(amountOfCities) {
 }
 
-void TabuSearchAlgorithm::DoCalculations(int tabu_list_size, int neighbours_count, int steps_without_change,
-                                         int steps_with_random_neighbourhood) {
-    if (amountOfCities == 0) return;
+void TabuSearchAlgorithm::DoCalculations(int tabu_list_size, int neighbours_count,
+                                         int maximumIterationsWithoutBetterSolution,
+                                         int maximumAmountOfRestarts, int cadence) {
     srand(static_cast<unsigned int>(time(nullptr)));
 
     int current_cost;
-    std::vector<int> current_solution(generateRandomSolution());
+    std::vector<int> current_solution(GreedyAlgorithm());
     current_cost = countCost(current_solution);
 
     optimalWay = current_solution;
@@ -29,8 +30,8 @@ void TabuSearchAlgorithm::DoCalculations(int tabu_list_size, int neighbours_coun
     std::vector<int> neighbour;
     int neighbour_cost;
     int the_best_neighbour_cost;
-    int steps = 0;
-    int change_neighbourhood_count = 0;
+    int iterationsWithoutBetterSolution = 0;
+    int amountOfRestarts = 0;
     do {
         the_best_neighbour_cost = std::numeric_limits<int>::max();
         for (int i = 0; i < neighbours_count; i++) {
@@ -49,21 +50,64 @@ void TabuSearchAlgorithm::DoCalculations(int tabu_list_size, int neighbours_coun
         if (current_cost < length) {
             optimalWay = current_solution;
             length = current_cost;
-            steps = 0;
+            iterationsWithoutBetterSolution = 0;
+        }
+        iterationsWithoutBetterSolution++;
+
+        if (tabuList.size() > tabu_list_size) {
+            tabuList.pop_front();
         }
 
-        if (tabu_list.size() > tabu_list_size) {
-            tabu_list.pop_front();
+        std::pair<std::pair<int, int>, int> tabuMovement{saved_swap, cadence};
+        tabuList.push_back(tabuMovement);
+
+        if (CriticalEvent(iterationsWithoutBetterSolution, maximumIterationsWithoutBetterSolution)) {
+            Restart(current_solution, current_cost);
+            amountOfRestarts++;
+            iterationsWithoutBetterSolution = 0;
         }
-        tabu_list.push_back(saved_swap);
-        steps++;
-        if (steps > steps_without_change) {
-            current_solution = generateRandomSolution();
-            current_cost = countCost(current_solution);
-            change_neighbourhood_count++;
-            steps = 0;
+    } while (amountOfRestarts < maximumAmountOfRestarts);
+}
+
+std::vector<int> TabuSearchAlgorithm::GreedyAlgorithm() {
+    std::vector<int> solution;
+    for (int i = 0; i < amountOfCities; i++) {
+        solution.push_back(i);
+    }
+
+    bool *visitedCities = new bool[amountOfCities];
+    for (int i = 0; i < amountOfCities; i++) {
+        visitedCities[i] = false;
+    }
+
+    length = 0;
+    int currentMinLength;
+
+    int nextCity = 0;
+    int city = nextCity;
+    visitedCities[city] = true;
+
+    solution[0] = nextCity;
+
+    for (auto j = 0; j < amountOfCities - 1; j++) {
+        city = nextCity;
+        currentMinLength = INT_MAX;
+        for (auto i = 0; i < amountOfCities; i++) {
+            if (matrixOfCities[city][i] < currentMinLength && !visitedCities[i]) {
+                currentMinLength = matrixOfCities[city][i];
+                nextCity = i;
+            }
         }
-    } while (change_neighbourhood_count < steps_with_random_neighbourhood);
+        visitedCities[nextCity] = true;
+        solution[j] = nextCity;
+        length += matrixOfCities[city][nextCity];
+    }
+    solution[amountOfCities - 1] = 0;
+    length += matrixOfCities[solution[amountOfCities - 2]][0];
+
+    delete[] visitedCities;
+
+    return solution;
 }
 
 std::vector<int> TabuSearchAlgorithm::generateRandomSolution() {
@@ -111,11 +155,14 @@ std::pair<int, int> TabuSearchAlgorithm::swapTwoRandomCities(std::vector<int> &p
 }
 
 bool TabuSearchAlgorithm::checkTabu(std::pair<int, int> &swaped_cities, std::vector<int> &path, int neighbour_cost) {
-    auto list_iterator = tabu_list.begin();
-    while (list_iterator != tabu_list.end()) {
-        if (swaped_cities.first == list_iterator->second || swaped_cities.second == list_iterator->first) {
-            long first_element_index = std::find(path.begin(), path.end(), list_iterator->first) - path.begin();
-            long second_element_index = std::find(path.begin(), path.end(), list_iterator->second) - path.begin();
+    auto list_iterator = tabuList.begin();
+    while (list_iterator != tabuList.end()) {
+        if (swaped_cities.first == list_iterator->first.second ||
+            swaped_cities.second == list_iterator->first.first) {
+            long first_element_index =
+                    std::find(path.begin(), path.end(), list_iterator->first.first) - path.begin();
+            long second_element_index =
+                    std::find(path.begin(), path.end(), list_iterator->first.second) - path.begin();
             if (first_element_index < second_element_index && neighbour_cost > length)
                 return false;
         }
@@ -126,4 +173,14 @@ bool TabuSearchAlgorithm::checkTabu(std::pair<int, int> &swaped_cities, std::vec
 
 std::pair<std::vector<int>, int> TabuSearchAlgorithm::GetResults() {
     return std::make_pair(optimalWay, length);
+}
+
+bool
+TabuSearchAlgorithm::CriticalEvent(int &iterationsWithoutBetterSolution, int &maximumIterationsWithoutBetterSolution) {
+    return iterationsWithoutBetterSolution > maximumIterationsWithoutBetterSolution;
+}
+
+void TabuSearchAlgorithm::Restart(std::vector<int> &currentSolution, int &currentCost) {
+    currentSolution = generateRandomSolution();
+    currentCost = countCost(currentSolution);
 }

@@ -38,8 +38,6 @@ void menu_travelling_salesman_problem() //Obsługa problemu komiwojażera.
                                                 parser.GetFileName(), parser.GetGraphType());
                 } catch (std::logic_error &e) {
                     std::cout << e.what() << std::endl;
-                } catch (std::invalid_argument &e_2) {
-                    std::cout << e_2.what() << std::endl;
                 }
                 break;
 
