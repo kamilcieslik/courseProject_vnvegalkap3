@@ -13,7 +13,7 @@ TabuSearchAlgorithm::TabuSearchAlgorithm(int **matrixOfCities, int amountOfCitie
                                                                                      amountOfCities(amountOfCities) {
 }
 
-void TabuSearchAlgorithm::DoCalculations(int tabuListSize, int amountOfNeighbours,
+void TabuSearchAlgorithm::DoCalculations(int tabuListSize,
                                          int maximumIterationsWithoutBetterSolution,
                                          int maximumRestarts, int cadence, int maximumRestartsWithoutBetterSolution, bool isIntensification) {
     if (isIntensification) {
@@ -34,6 +34,7 @@ void TabuSearchAlgorithm::DoCalculations(int tabuListSize, int amountOfNeighbour
         std::vector<int> neighbour;
         std::pair<int, int> replacedCities;
 
+        int amountOfNeighbours = amountOfCities * 2;
         int amountOfIterations = 0;
         int amountOfRestarts = 0;
         int iterationsWithoutBetterSolution = 0;
@@ -50,9 +51,9 @@ void TabuSearchAlgorithm::DoCalculations(int tabuListSize, int amountOfNeighbour
                 length = currentCost;
                 intermediateSolutions.push_back(
                         IntermediateSolutionOfTheTabuSearchAlgorithm(timeMeasurement.GetTimeInSeconds(), length));
-                std::cout << std::fixed << std::setprecision(6)
-                          << intermediateSolutions.back().getTimeFromTheBeginningOfTheAlgorithm() << "\t|\t"
-                          << intermediateSolutions.back().getActualResult();
+               // std::cout << std::fixed << std::setprecision(6)
+                //          << intermediateSolutions.back().getTimeFromTheBeginningOfTheAlgorithm() << "\t|\t"
+                //          << intermediateSolutions.back().getActualResult() << std::endl;
                 iterationsWithoutBetterSolution = 0;
                 foundBetterSolutionAfterRestart = true;
             } else
@@ -105,6 +106,7 @@ void TabuSearchAlgorithm::DoCalculations(int tabuListSize, int amountOfNeighbour
         std::vector<int> neighbour;
         std::pair<int, int> replacedCities;
 
+        int amountOfNeighbours = amountOfCities * 2;
         int amountOfIterations = 0;
         int amountOfRestarts = 0;
         int iterationsWithoutBetterSolution = 0;

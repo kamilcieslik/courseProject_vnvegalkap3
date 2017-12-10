@@ -219,19 +219,19 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm() {
 
     TabuSearchAlgorithm algorithm(matrixOfCities, amountOfCities);
 
-    //tabuListSize, amountOfNeighbours, maximumIterationsWithoutBetterSolution, maximumRestarts, cadence, maximumRestartsWithoutBetterSolution
+    //tabuListSize, maximumIterationsWithoutBetterSolution, maximumRestarts, cadence, maximumRestartsWithoutBetterSolution, inte
 
     if (amountOfCities <= 30) {
-        algorithm.DoCalculations(13, 500, 500, 400, 10, 4, false);
+        algorithm.DoCalculations(13, 500, 400, 10, 4, true);
         std::cout << "<=30" << std::endl;
     } else if (amountOfCities > 30 && amountOfCities <= 150) {
-        algorithm.DoCalculations(13, 500, 200, 300, 10, 5, false);
+        algorithm.DoCalculations(13, 1000, 400, 10, 4, true);
         std::cout << ">30 & <=150" << std::endl;
     } else if (amountOfCities > 150 && amountOfCities <= 5000) {
-        algorithm.DoCalculations(13, 5000, 20, 4500, 10, 6, false);
+        algorithm.DoCalculations(13, 50, 30, 20, 3, true);
         std::cout << ">150 & <=5000" << std::endl;
     } else {
-        algorithm.DoCalculations(13, 5000, 50, 100, 10, 7, false);
+        algorithm.DoCalculations(13, 50, 100, 10, 7, false);
         std::cout << ">5000" << std::endl;
     }
 
