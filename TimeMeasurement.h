@@ -16,6 +16,7 @@ class TimeMeasurement {
 private:
     Clock::time_point timeStart;
     Clock::time_point timeStop;
+    bool isStoppedEarlier;
 
 public:
     TimeMeasurement();

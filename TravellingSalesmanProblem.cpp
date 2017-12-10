@@ -218,9 +218,26 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm() {
     optimalWay.clear();
 
     TabuSearchAlgorithm algorithm(matrixOfCities, amountOfCities);
-    algorithm.DoCalculations();
+
+    //tabuListSize, amountOfNeighbours, maximumIterationsWithoutBetterSolution, maximumRestarts, cadence, maximumRestartsWithoutBetterSolution
+
+    if (amountOfCities <= 30) {
+        algorithm.DoCalculations(13, 500, 500, 400, 10, 4, false);
+        std::cout << "<=30" << std::endl;
+    } else if (amountOfCities > 30 && amountOfCities <= 150) {
+        algorithm.DoCalculations(13, 500, 200, 300, 10, 5, false);
+        std::cout << ">30 & <=150" << std::endl;
+    } else if (amountOfCities > 150 && amountOfCities <= 5000) {
+        algorithm.DoCalculations(13, 5000, 20, 4500, 10, 6, false);
+        std::cout << ">150 & <=5000" << std::endl;
+    } else {
+        algorithm.DoCalculations(13, 5000, 50, 100, 10, 7, false);
+        std::cout << ">5000" << std::endl;
+    }
+
     optimalWay = algorithm.GetResults().first;
     optimalLength = algorithm.GetResults().second;
+    intermediateSolutions = algorithm.getIntermediateSolutions();
 }
 
 void TravellingSalesmanProblem::PrintSolution() {
@@ -244,7 +261,7 @@ void TravellingSalesmanProblem::PrintSolution() {
         std::cout << optimalWay[0] << std::endl;
     } else if (whichTypeOfAlgorithm == "branch_and_bound") {
         for (auto i = 0; i < amountOfCities; i++) {
-            std::cout << optimalWay[i] -1 << " - ";
+            std::cout << optimalWay[i] - 1 << " - ";
         }
         std::cout << optimalWay[0] - 1 << std::endl;
     } else if (whichTypeOfAlgorithm == "tabu_search") {
@@ -252,6 +269,17 @@ void TravellingSalesmanProblem::PrintSolution() {
             std::cout << optimalWay[i] << " - ";
         }
         std::cout << optimalWay[0] << std::endl;
+        std::cout << "-------------------" << std::endl;
+        std::cout << "\e[1mIntermediate Solutions\e[0m" << std::endl;
+        std::cout << "\ttime[s]\t\t\tlength" << std::endl;
+        for (auto i = 0; i < intermediateSolutions.size(); i++) {
+            std::cout << i + 1 << ".\t" << std::fixed << std::setprecision(6)
+                      << intermediateSolutions[i].getTimeFromTheBeginningOfTheAlgorithm() << "\t|\t"
+                      << intermediateSolutions[i].getActualResult();
+            if (i == 0)
+                std::cout << "\t<-- Greedy Solution";
+            std::cout << std::endl;
+        }
     }
 }
 

@@ -13,14 +13,18 @@ TimeMeasurement::~TimeMeasurement() {
 }
 
 void TimeMeasurement::TimeStart() {
+    isStoppedEarlier=false;
     timeStart = Clock::now();
 }
 
 void TimeMeasurement::TimeStop() {
+    isStoppedEarlier=true;
     timeStop = Clock::now();
 }
 
 double TimeMeasurement::GetTimeInSeconds() {
+    if (!isStoppedEarlier)
+        timeStop = Clock::now();
     std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(
             timeStop - timeStart);
     return time_span.count();

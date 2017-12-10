@@ -18,6 +18,7 @@
 #include <queue>
 #include <algorithm>
 #include <map>
+#include "IntermediateSolutionOfTheTabuSearchAlgorithm.h"
 
 class TravellingSalesmanProblem {
 
@@ -25,11 +26,12 @@ private:
     int amountOfCities;
     int **matrixOfCities;
     std::vector<int> optimalWay;
-    int optimalLength;
+    long long int optimalLength;
     std::string fileName;
     std::string graphType;
     bool randomGeneratorData;
     std::string whichTypeOfAlgorithm;
+    std::vector<IntermediateSolutionOfTheTabuSearchAlgorithm> intermediateSolutions;
 
 public:
     TravellingSalesmanProblem();
