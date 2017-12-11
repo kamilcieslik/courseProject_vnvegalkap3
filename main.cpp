@@ -19,7 +19,7 @@ void displayMenu(const std::string &info) //Menu dla problemu komiwojażera.
     std::cout << "Podaj opcje: ";
 }
 
-void menu_tabu_search_neighborhoodType_menu(TravellingSalesmanProblem &s){
+void menu_tabu_search_neighborhoodType(TravellingSalesmanProblem &s, bool showIntermediateSolutionsInRuntime){
     int option;
     do {
         std::cout << std::endl;
@@ -36,7 +36,7 @@ void menu_tabu_search_neighborhoodType_menu(TravellingSalesmanProblem &s){
                 try {
                     TimeMeasurement t;
                     t.TimeStart();
-                    s.PerformTabuSearchAlgorithm("swap");
+                    s.PerformTabuSearchAlgorithm("swap", showIntermediateSolutionsInRuntime);
                     t.TimeStop();
                     s.PrintCitiesForTheTravellingSalesman(false);
                     std::cout << std::endl;
@@ -54,7 +54,7 @@ void menu_tabu_search_neighborhoodType_menu(TravellingSalesmanProblem &s){
                 try {
                     TimeMeasurement t;
                     t.TimeStart();
-                    s.PerformTabuSearchAlgorithm("insert");
+                    s.PerformTabuSearchAlgorithm("insert", showIntermediateSolutionsInRuntime);
                     t.TimeStop();
                     s.PrintCitiesForTheTravellingSalesman(false);
                     std::cout << std::endl;
@@ -72,7 +72,7 @@ void menu_tabu_search_neighborhoodType_menu(TravellingSalesmanProblem &s){
                 try {
                     TimeMeasurement t;
                     t.TimeStart();
-                    s.PerformTabuSearchAlgorithm("invert");
+                    s.PerformTabuSearchAlgorithm("invert", showIntermediateSolutionsInRuntime);
                     t.TimeStop();
                     s.PrintCitiesForTheTravellingSalesman(false);
                     std::cout << std::endl;
@@ -84,6 +84,33 @@ void menu_tabu_search_neighborhoodType_menu(TravellingSalesmanProblem &s){
                 catch (std::logic_error &e) {
                     std::cout << e.what() << std::endl;
                 }
+                break;
+
+            default:
+                break;
+        }
+
+    } while (option != 0);
+}
+
+void menu_tabu_search_showIntermediateSolutions(TravellingSalesmanProblem &s){
+    int option;
+    do {
+        std::cout << std::endl;
+        std::cout << "*** Drukowanie cząstkowych wyników Tabu Search podczas wykonywania ***" << std::endl;
+        std::cout << "1. Tak." << std::endl;
+        std::cout << "2. Nie." << std::endl;
+        std::cout << "0. Powrót." << std::endl;
+        std::cout << "Podaj opcje: ";
+        std::cin >> option;
+        std::cout << std::endl;
+        switch (option) {
+            case 1:
+                menu_tabu_search_neighborhoodType(s, true);
+                break;
+
+            case 2:
+                menu_tabu_search_neighborhoodType(s, false);
                 break;
 
             default:
@@ -180,7 +207,7 @@ void menu_travelling_salesman_problem() //Obsługa problemu komiwojażera.
                 break;
 
             case 7: //Algorytm 3. - algorytm z zakazami.
-                menu_tabu_search_neighborhoodType_menu(s);
+                menu_tabu_search_showIntermediateSolutions(s);
                 break;
 
             default:

@@ -25,7 +25,7 @@ public:
     void DoCalculations(int tabuListSize = 13,
                         int maximumIterationsWithoutBetterSolution = 1000,
                         int maximumRestarts = 200, int tenure = 10, int maximumRestartsWithoutBetterSolution = 4,
-                        bool isIntensification = false, std::string neighborhoodType = "insert");
+                        std::string neighborhoodType = "insert", bool showIntermediateSolutionsInRuntime = false);
 
     std::pair<std::vector<int>, int> GetResults();
 

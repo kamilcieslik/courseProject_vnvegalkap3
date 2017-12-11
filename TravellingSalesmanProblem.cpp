@@ -199,7 +199,7 @@ void TravellingSalesmanProblem::PerformBranchAndBoundAlgorithm() {
     optimalLength = algorithm.GetResults().second;
 }
 
-void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborhoodType) {
+void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborhoodType, bool showIntermediateSolutionsInRuntime) {
     if (matrixOfCities == nullptr)
         throw std::logic_error("Brak miast do przeprowadzenia algorytmu problemu komiwojażera.");
 
@@ -208,27 +208,27 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborh
 
     TabuSearchAlgorithm algorithm(matrixOfCities, amountOfCities);
 
-    //tabuListSize, maximumIterationsWithoutBetterSolution, maximumRestarts, cadence, maximumRestartsWithoutBetterSolution, inte
+    //tabuListSize, maximumIterationsWithoutBetterSolution, maximumRestarts, cadence, maximumRestartsWithoutBetterSolution
     if (neighborhoodType=="auto") {
         if (amountOfCities <= 30) {
-            algorithm.DoCalculations(13, 500, 400, 10, 4, true, "insert");
+            algorithm.DoCalculations(13, 500, 400, 10, 4, "insert");
         } else if (amountOfCities > 30 && amountOfCities <= 150) {
-            algorithm.DoCalculations(13, 1000, 400, 10, 4, true, "insert");
+            algorithm.DoCalculations(13, 1000, 400, 10, 4, "insert");
         } else if (amountOfCities > 150 && amountOfCities <= 5000) {
-            algorithm.DoCalculations(13, 50, 30, 20, 3, true, "insert");
+            algorithm.DoCalculations(13, 50, 30, 20, 3, "insert");
         } else
-            algorithm.DoCalculations(13, 50, 100, 10, 7, false, "insert");
+            algorithm.DoCalculations(13, 50, 100, 10, 7, "insert");
     }
     else
     {
         if (amountOfCities <= 30) {
-            algorithm.DoCalculations(13, 500, 400, 10, 4, true, neighborhoodType);
+            algorithm.DoCalculations(13, 500, 400, 10, 4, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else if (amountOfCities > 30 && amountOfCities <= 150) {
-            algorithm.DoCalculations(13, 1000, 400, 10, 4, true, neighborhoodType);
+            algorithm.DoCalculations(13, 1000, 400, 10, 4, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else if (amountOfCities > 150 && amountOfCities <= 5000) {
-            algorithm.DoCalculations(13, 3000, 200, 10, 4, true, neighborhoodType);
+            algorithm.DoCalculations(13, 3000, 200, 10, 4, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else
-            algorithm.DoCalculations(13, 5000, 50, 10, 2, true, neighborhoodType);
+            algorithm.DoCalculations(13, 5000, 50, 10, 2, neighborhoodType, showIntermediateSolutionsInRuntime);
     }
     optimalWay = algorithm.GetResults().first;
     optimalLength = algorithm.GetResults().second;
