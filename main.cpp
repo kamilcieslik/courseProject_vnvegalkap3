@@ -15,8 +15,82 @@ void displayMenu(const std::string &info) //Menu dla problemu komiwojażera.
     std::cout << "5. Algorytm - przeszukiwanie zupełne." << std::endl;
     std::cout << "6. Algorytm - metoda podziału i ograniczeń." << std::endl;
     std::cout << "7. Algorytm - algorytm z zakazami." << std::endl;
-    std::cout << "0. Powrót do menu." << std::endl;
+    std::cout << "0. Powrót." << std::endl;
     std::cout << "Podaj opcje: ";
+}
+
+void menu_tabu_search_neighborhoodType_menu(TravellingSalesmanProblem &s){
+    int option;
+    do {
+        std::cout << std::endl;
+        std::cout << "*** Rodzaj sąsiedztwa Tabu Search ***" << std::endl;
+        std::cout << "1. SWAP." << std::endl;
+        std::cout << "2. INSERT." << std::endl;
+        std::cout << "2. INVERT." << std::endl;
+        std::cout << "0. Powrót." << std::endl;
+        std::cout << "Podaj opcje: ";
+        std::cin >> option;
+        std::cout << std::endl;
+        switch (option) {
+            case 1: // Metoda generowania sąsiedztwa typu SWAP.
+                try {
+                    TimeMeasurement t;
+                    t.TimeStart();
+                    s.PerformTabuSearchAlgorithm("swap");
+                    t.TimeStop();
+                    s.PrintCitiesForTheTravellingSalesman(false);
+                    std::cout << std::endl;
+                    s.PrintSolution();
+                    std::cout.setf(std::ios::fixed, std::ios::floatfield);
+                    std::cout.setf(std::ios::showpoint);
+                    std::cout << "Time\t= " << t.GetTimeInSeconds() << " s" << std::endl << std::endl;
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
+                break;
+
+            case 2: // Metoda generowania sąsiedztwa typu INSERT.
+                try {
+                    TimeMeasurement t;
+                    t.TimeStart();
+                    s.PerformTabuSearchAlgorithm("insert");
+                    t.TimeStop();
+                    s.PrintCitiesForTheTravellingSalesman(false);
+                    std::cout << std::endl;
+                    s.PrintSolution();
+                    std::cout.setf(std::ios::fixed, std::ios::floatfield);
+                    std::cout.setf(std::ios::showpoint);
+                    std::cout << "Time\t= " << t.GetTimeInSeconds() << " s" << std::endl << std::endl;
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
+                break;
+
+            case 3: // Metoda generowania sąsiedztwa typu INVERT.
+                try {
+                    TimeMeasurement t;
+                    t.TimeStart();
+                    s.PerformTabuSearchAlgorithm("invert");
+                    t.TimeStop();
+                    s.PrintCitiesForTheTravellingSalesman(false);
+                    std::cout << std::endl;
+                    s.PrintSolution();
+                    std::cout.setf(std::ios::fixed, std::ios::floatfield);
+                    std::cout.setf(std::ios::showpoint);
+                    std::cout << "Time\t= " << t.GetTimeInSeconds() << " s" << std::endl << std::endl;
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
+                break;
+
+            default:
+                break;
+        }
+
+    } while (option != 0);
 }
 
 void menu_travelling_salesman_problem() //Obsługa problemu komiwojażera.
@@ -106,21 +180,7 @@ void menu_travelling_salesman_problem() //Obsługa problemu komiwojażera.
                 break;
 
             case 7: //Algorytm 3. - algorytm z zakazami.
-                try {
-                    TimeMeasurement t;
-                    t.TimeStart();
-                    s.PerformTabuSearchAlgorithm();
-                    t.TimeStop();
-                    s.PrintCitiesForTheTravellingSalesman(false);
-                    std::cout << std::endl;
-                    s.PrintSolution();
-                    std::cout.setf(std::ios::fixed, std::ios::floatfield);
-                    std::cout.setf(std::ios::showpoint);
-                    std::cout << "Time\t= " << t.GetTimeInSeconds() << " s" << std::endl << std::endl;
-                }
-                catch (std::logic_error &e) {
-                    std::cout << e.what() << std::endl;
-                }
+                menu_tabu_search_neighborhoodType_menu(s);
                 break;
 
             default:
@@ -129,6 +189,8 @@ void menu_travelling_salesman_problem() //Obsługa problemu komiwojażera.
 
     } while (option != 0);
 }
+
+
 
 void menu_tests() //Obsługa testów czasowych.
 {

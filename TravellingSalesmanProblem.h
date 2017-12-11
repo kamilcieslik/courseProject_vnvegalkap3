@@ -53,7 +53,7 @@ public:
 
     void PerformBranchAndBoundAlgorithm();
 
-    void PerformTabuSearchAlgorithm();
+    void PerformTabuSearchAlgorithm(std::string neighborhoodType = "auto");
 
     void PrintSolution();
 

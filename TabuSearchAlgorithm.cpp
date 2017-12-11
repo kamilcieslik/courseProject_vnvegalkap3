@@ -15,7 +15,8 @@ TabuSearchAlgorithm::TabuSearchAlgorithm(int **matrixOfCities, int amountOfCitie
 
 void TabuSearchAlgorithm::DoCalculations(int tabuListSize,
                                          int maximumIterationsWithoutBetterSolution,
-                                         int maximumRestarts, int cadence, int maximumRestartsWithoutBetterSolution, bool isIntensification) {
+                                         int maximumRestarts, int tenure, int maximumRestartsWithoutBetterSolution,
+                                         bool isIntensification, std::string neighborhoodType) {
     if (isIntensification) {
         TimeMeasurement timeMeasurement;
         timeMeasurement.TimeStart();
@@ -41,9 +42,11 @@ void TabuSearchAlgorithm::DoCalculations(int tabuListSize,
         int restartsWithoutBetterSolution = 0;
         bool foundBetterSolutionAfterRestart = false;
         while (amountOfRestarts < maximumRestarts) {
-            std::list<std::pair<int, int>> neighbourhood = findRandomNeighbourhood(currentSolution, amountOfNeighbours);
+            std::list<std::pair<int, int>> neighbourhood = findRandomCitiesToNeighbourhood(currentSolution,
+                                                                                           amountOfNeighbours);
 
-            currentSolution = aspirationPlus(currentSolution, neighbourhood, replacedCities);
+            currentSolution = GenerateBestNewCurrentSolutionFromNeighbourhood(currentSolution, neighbourhood,
+                                                                              replacedCities, neighborhoodType);
             currentCost = countCost(currentSolution);
 
             if (currentCost < length) {
@@ -51,7 +54,7 @@ void TabuSearchAlgorithm::DoCalculations(int tabuListSize,
                 length = currentCost;
                 intermediateSolutions.push_back(
                         IntermediateSolutionOfTheTabuSearchAlgorithm(timeMeasurement.GetTimeInSeconds(), length));
-               // std::cout << std::fixed << std::setprecision(6)
+                // std::cout << std::fixed << std::setprecision(6)
                 //          << intermediateSolutions.back().getTimeFromTheBeginningOfTheAlgorithm() << "\t|\t"
                 //          << intermediateSolutions.back().getActualResult() << std::endl;
                 iterationsWithoutBetterSolution = 0;
@@ -63,9 +66,9 @@ void TabuSearchAlgorithm::DoCalculations(int tabuListSize,
                 tabuList.pop_front();
             }
 
-            std::pair<std::pair<int, int>, int> tabuMovement{replacedCities, cadence};
+            std::pair<std::pair<int, int>, int> tabuMovement{replacedCities, tenure};
             tabuList.push_back(tabuMovement);
-            decrementCadences(tabuList);
+            decrementTenures(tabuList);
 
             if (restartsWithoutBetterSolution == maximumRestartsWithoutBetterSolution) {
                 currentSolution = optimalWay;
@@ -86,9 +89,7 @@ void TabuSearchAlgorithm::DoCalculations(int tabuListSize,
             }
             amountOfIterations++;
         }
-    }
-    else
-    {
+    } else {
         TimeMeasurement timeMeasurement;
         timeMeasurement.TimeStart();
 
@@ -111,9 +112,11 @@ void TabuSearchAlgorithm::DoCalculations(int tabuListSize,
         int amountOfRestarts = 0;
         int iterationsWithoutBetterSolution = 0;
         while (amountOfRestarts < maximumRestarts) {
-            std::list<std::pair<int, int>> neighbourhood = findRandomNeighbourhood(currentSolution, amountOfNeighbours);
+            std::list<std::pair<int, int>> neighbourhood = findRandomCitiesToNeighbourhood(currentSolution,
+                                                                                           amountOfNeighbours);
 
-            currentSolution = aspirationPlus(currentSolution, neighbourhood, replacedCities);
+            currentSolution = GenerateBestNewCurrentSolutionFromNeighbourhood(currentSolution, neighbourhood,
+                                                                              replacedCities, neighborhoodType);
             currentCost = countCost(currentSolution);
 
             if (currentCost < length) {
@@ -129,9 +132,9 @@ void TabuSearchAlgorithm::DoCalculations(int tabuListSize,
                 tabuList.pop_front();
             }
 
-            std::pair<std::pair<int, int>, int> tabuMovement{replacedCities, cadence};
+            std::pair<std::pair<int, int>, int> tabuMovement{replacedCities, tenure};
             tabuList.push_back(tabuMovement);
-            decrementCadences(tabuList);
+            decrementTenures(tabuList);
 
             if (CriticalEvent(iterationsWithoutBetterSolution, maximumIterationsWithoutBetterSolution)) {
                 Restart(currentSolution, currentCost);
@@ -186,34 +189,35 @@ std::vector<int> TabuSearchAlgorithm::GreedyAlgorithm() {
 
 std::vector<int> TabuSearchAlgorithm::generateRandomSolution() {
     std::vector<int> solution;
-    for (int i = 0; i < amountOfCities; i++) {
+    for (auto i = 0; i < amountOfCities; i++) {
         solution.push_back(i);
     }
     std::shuffle(solution.begin(), solution.end(), std::mt19937(std::random_device()()));
     return solution;
 }
 
-long long int TabuSearchAlgorithm::countCost(std::vector<int> path) {
+long long int TabuSearchAlgorithm::countCost(std::vector<int> currentSolution) {
     long long int cost = 0;
-    for (std::size_t i = 0; i < path.size() - 1; i++) {
-        cost += matrixOfCities[path[i]][path[i + 1]];
+    for (std::size_t i = 0; i < currentSolution.size() - 1; i++) {
+        cost += matrixOfCities[currentSolution[i]][currentSolution[i + 1]];
     }
-    cost += matrixOfCities[path[path.size() - 1]][path[0]];
+    cost += matrixOfCities[currentSolution[currentSolution.size() - 1]][currentSolution[0]];
 
     return cost;
 }
 
-bool TabuSearchAlgorithm::checkTabu(std::pair<int, int> &swaped_cities, std::vector<int> &path,
-                                    long long int neighbour_cost) {
+bool TabuSearchAlgorithm::citiesDoNotExistOnTabuList(std::pair<int, int> &neighborhoodCities,
+                                                     std::vector<int> &tempSolution,
+                                                     long long int neighborhoodCost) {
     auto iterator = tabuList.begin();
     while (iterator != tabuList.end()) {
-        if (swaped_cities.first == iterator->first.second ||
-            swaped_cities.second == iterator->first.first) {
-            long first_element_index =
-                    std::find(path.begin(), path.end(), iterator->first.first) - path.begin();
-            long second_element_index =
-                    std::find(path.begin(), path.end(), iterator->first.second) - path.begin();
-            if (first_element_index < second_element_index && neighbour_cost > length)
+        if (neighborhoodCities.first == iterator->first.second ||
+            neighborhoodCities.second == iterator->first.first) {
+            long city_1Position =
+                    std::find(tempSolution.begin(), tempSolution.end(), iterator->first.first) - tempSolution.begin();
+            long city_2Position =
+                    std::find(tempSolution.begin(), tempSolution.end(), iterator->first.second) - tempSolution.begin();
+            if (neighborhoodCost > length && city_1Position < city_2Position)
                 return false;
         }
         iterator++;
@@ -246,78 +250,81 @@ void TabuSearchAlgorithm::Restart(std::vector<int> &currentSolution, long long i
 }
 
 std::list<std::pair<int, int>>
-TabuSearchAlgorithm::findRandomNeighbourhood(std::vector<int> &solution, int neighbourhoodSize) {
-    std::list<std::pair<int, int>> neighbourhood;
+TabuSearchAlgorithm::findRandomCitiesToNeighbourhood(std::vector<int> &currentSolution, int neighbourhoodSize) {
+    std::list<std::pair<int, int>> randomCitiesToNeighbourhood;
 
-    for (int i = 0; i < neighbourhoodSize; i++) {
-        unsigned long firstPosition = rand() % solution.size();
+    for (auto i = 0; i < neighbourhoodSize; i++) {
+        auto city_1 = rand() % currentSolution.size();
 
-        unsigned long secondPosition;
+        unsigned long city_2;
         do {
-            secondPosition = rand() % solution.size();
-        } while (firstPosition == secondPosition);
+            city_2 = rand() % currentSolution.size();
+        } while (city_1 == city_2);
 
-        std::pair<int, int> swaped_cities;
+        std::pair<int, int> neighborhoodCities;
 
-        if (firstPosition > secondPosition) {
-            swaped_cities.first = solution.at(secondPosition);
-            swaped_cities.second = solution.at(firstPosition);
+        if (city_1 > city_2) {
+            neighborhoodCities.first = currentSolution.at(city_2);
+            neighborhoodCities.second = currentSolution.at(city_1);
         } else {
-            swaped_cities.first = solution.at(firstPosition);
-            swaped_cities.second = solution.at(secondPosition);
+            neighborhoodCities.first = currentSolution.at(city_1);
+            neighborhoodCities.second = currentSolution.at(city_2);
         }
 
-        std::pair<int, int> neighbour{solution.at(firstPosition), solution.at(secondPosition)};
-
-        neighbourhood.push_back(neighbour);
+        randomCitiesToNeighbourhood.push_back({currentSolution.at(city_1), currentSolution.at(city_2)});
     }
 
-    return neighbourhood;
+    return randomCitiesToNeighbourhood;
 }
 
 std::vector<int>
-TabuSearchAlgorithm::aspirationPlus(std::vector<int> solution, std::list<std::pair<int, int>> neighbour,
-                                    std::pair<int, int> pair) {
-    std::vector<int> best_neighbour;
+TabuSearchAlgorithm::GenerateBestNewCurrentSolutionFromNeighbourhood(std::vector<int> currentSolution,
+                                                                     std::list<std::pair<int, int>> neighbours,
+                                                                     std::pair<int, int> neighborhoodCities,
+                                                                     std::string neighborhoodType) {
+    std::vector<int> bestNeighbour;
 
-    int best_neighbour_Q = -1;
-    int current_neighbour_Q = -1;
+    int bestNeighbourCost = -1;
+    int currentNeighbourCost = -1;
 
-    for (std::pair<int, int> swaped_pair : neighbour) {
-        std::vector<int> tempSolution = solution;
+    for (auto cities : neighbours) {
+        auto tempSolution = currentSolution;
 
-        long swap_1 = distance(
+        long city_1 = distance(
                 tempSolution.begin(),
-                find(tempSolution.begin(), tempSolution.end(), swaped_pair.first)
+                find(tempSolution.begin(), tempSolution.end(), cities.first)
         );
 
-        long swap_2 = distance(
+        long city_2 = distance(
                 tempSolution.begin(),
-                find(tempSolution.begin(), tempSolution.end(), swaped_pair.second)
+                find(tempSolution.begin(), tempSolution.end(), cities.second)
         );
 
-        uint temp = tempSolution[swap_1];
-        tempSolution[swap_1] = tempSolution[swap_2];
-        tempSolution[swap_2] = temp;
+        if (neighborhoodType == "swap")
+            neighbourBySwap(tempSolution, city_1, city_2);
+        else if (neighborhoodType == "insert")
+            neighbourByInsert(tempSolution, city_1, city_2);
+        else if (neighborhoodType == "invert")
+            neighbourByInvert(tempSolution, city_1, city_2);
 
-        current_neighbour_Q = countCost(tempSolution);
+        currentNeighbourCost = countCost(tempSolution);
 
-        if ((best_neighbour_Q == -1 || current_neighbour_Q < best_neighbour_Q) &&
-            checkTabu(swaped_pair, tempSolution, current_neighbour_Q)) {
-            best_neighbour_Q = current_neighbour_Q;
-            best_neighbour = tempSolution;
-            pair = swaped_pair;
+        if ((bestNeighbourCost == -1 || currentNeighbourCost < bestNeighbourCost) &&
+            citiesDoNotExistOnTabuList(cities, tempSolution, currentNeighbourCost)) {
+            bestNeighbourCost = currentNeighbourCost;
+            bestNeighbour = tempSolution;
+            neighborhoodCities = cities;
         }
     }
 
-    return best_neighbour;
+    return bestNeighbour;
 }
 
 const std::vector<IntermediateSolutionOfTheTabuSearchAlgorithm> &TabuSearchAlgorithm::getIntermediateSolutions() const {
     return intermediateSolutions;
 }
 
-void TabuSearchAlgorithm::decrementCadences(std::list<std::pair<std::pair<int, int>, int>> &tabuList) {
+void TabuSearchAlgorithm::decrementTenures(std::list<std::pair<std::pair<int, int>, int>> &tabuList) {
     for (auto iterator = tabuList.begin(); iterator != tabuList.end();) {
         if (0 == iterator->second)
             iterator = tabuList.erase(iterator);
@@ -325,5 +332,31 @@ void TabuSearchAlgorithm::decrementCadences(std::list<std::pair<std::pair<int, i
             iterator->second--;
             ++iterator;
         }
+    }
+}
+
+void TabuSearchAlgorithm::neighbourBySwap(std::vector<int> &tempSolution, long city_1, long city_2) {
+    std::swap(tempSolution[city_1], tempSolution[city_2]);
+}
+
+void TabuSearchAlgorithm::neighbourByInsert(std::vector<int> &tempSolution, long city_1, long city_2) {
+    if (city_1 > city_2) {
+        auto temp = tempSolution[city_1];
+        for (auto i = city_1; i > city_2; i--)
+            tempSolution[i] = tempSolution[i - 1];
+        tempSolution[city_2] = temp;
+    } else {
+        auto temp = tempSolution[city_2];
+        for (auto i = city_2; i > city_1; i--)
+            tempSolution[i] = tempSolution[i - 1];
+        tempSolution[city_1] = temp;
+    }
+}
+
+void TabuSearchAlgorithm::neighbourByInvert(std::vector<int> &tempSolution, long city_1, long city_2) {
+    if (city_1 < city_2) {
+        std::reverse(std::begin(tempSolution)+city_1, std::end(tempSolution)-(tempSolution.size()-city_2-1));
+    } else {
+        std::reverse(std::begin(tempSolution)+city_2, std::end(tempSolution)-(tempSolution.size()-city_1-1));
     }
 }

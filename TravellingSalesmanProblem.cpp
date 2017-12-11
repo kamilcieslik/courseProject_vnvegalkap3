@@ -17,9 +17,8 @@ TravellingSalesmanProblem::~TravellingSalesmanProblem() {
 }
 
 void TravellingSalesmanProblem::DeleteTravellingSalesman() {
-    for (auto i = 0; i < amountOfCities; i++) {
+    for (auto i = 0; i < amountOfCities; i++)
         delete[] matrixOfCities[i];
-    }
     delete[] matrixOfCities;
     matrixOfCities = nullptr;
 }
@@ -39,11 +38,9 @@ void TravellingSalesmanProblem::LoadArrayOfMatrixOfCities(long long int **_citie
     for (int i = 0; i < amountOfCities; i++)
         matrixOfCities[i] = new int[amountOfCities];
 
-    for (int i = 0; i < amountOfCities; i++) {
-        for (int j = 0; j < amountOfCities; j++) {
+    for (int i = 0; i < amountOfCities; i++)
+        for (int j = 0; j < amountOfCities; j++)
             matrixOfCities[i][j] = (int) _cities[i][j];
-        }
-    }
 
     fileName = std::move(_fileName);
     graphType = std::move(_graphType);
@@ -60,9 +57,8 @@ void TravellingSalesmanProblem::ReadCitiesFromNormalFile(std::string path) {
         file >> amountOfCities;
 
         matrixOfCities = new int *[amountOfCities];
-        for (auto i = 0; i < amountOfCities; i++) {
+        for (auto i = 0; i < amountOfCities; i++)
             matrixOfCities[i] = new int[amountOfCities];
-        }
         auto *securityMatrixForReadingPerLine = new int[amountOfCities];
 
         for (auto i = 0; i < amountOfCities; i++) {
@@ -71,16 +67,14 @@ void TravellingSalesmanProblem::ReadCitiesFromNormalFile(std::string path) {
                 file >> securityMatrixForReadingPerLine[j];
             }
 
-            for (auto j = 0; j < amountOfCities; j++) {
+            for (auto j = 0; j < amountOfCities; j++)
                 matrixOfCities[i][j] = securityMatrixForReadingPerLine[j];
-            }
         }
         delete[] securityMatrixForReadingPerLine;
         file.close();
         std::cout << "Wczytywanie zakończone pomyślnie." << std::endl;
-    } else {
+    } else
         std::cout << "Błąd otwarcia pliku." << std::endl;
-    }
 }
 
 void TravellingSalesmanProblem::GenerateRandomCities(int amountOfCities, int maxDistanceBetweenCity) {
@@ -91,40 +85,35 @@ void TravellingSalesmanProblem::GenerateRandomCities(int amountOfCities, int max
     if (amountOfCities == 0) {
         std::cout << "Podaj ilość miast: ";
         std::cin >> this->amountOfCities;
-        if (this->amountOfCities < 1) {
+        if (this->amountOfCities < 1)
             throw std::invalid_argument("Liczba miast nie może być mniejsza od 1.");
-        }
 
         matrixOfCities = new int *[this->amountOfCities];
-        for (auto i = 0; i < this->amountOfCities; i++) {
+        for (auto i = 0; i < this->amountOfCities; i++)
             matrixOfCities[i] = new int[this->amountOfCities];
-        }
 
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> dist_distancesBetweenCities(1, maxDistanceBetweenCity);
 
         for (auto i = 0; i < this->amountOfCities; i++) {
-            for (auto j = 0; j < this->amountOfCities; j++) {
+            for (auto j = 0; j < this->amountOfCities; j++)
                 matrixOfCities[i][j] = dist_distancesBetweenCities(gen);
-            }
         }
     } else {
         this->amountOfCities = amountOfCities;
 
         matrixOfCities = new int *[this->amountOfCities];
-        for (auto i = 0; i < this->amountOfCities; i++) {
+        for (auto i = 0; i < this->amountOfCities; i++)
             matrixOfCities[i] = new int[this->amountOfCities];
-        }
 
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> dist_distancesBetweenCities(1, maxDistanceBetweenCity);
 
         for (auto i = 0; i < this->amountOfCities; i++) {
-            for (auto j = 0; j < this->amountOfCities; j++) {
+            for (auto j = 0; j < this->amountOfCities; j++)
                 matrixOfCities[i][j] = dist_distancesBetweenCities(gen);
-            }
         }
     }
 }
@@ -210,7 +199,7 @@ void TravellingSalesmanProblem::PerformBranchAndBoundAlgorithm() {
     optimalLength = algorithm.GetResults().second;
 }
 
-void TravellingSalesmanProblem::PerformTabuSearchAlgorithm() {
+void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborhoodType) {
     if (matrixOfCities == nullptr)
         throw std::logic_error("Brak miast do przeprowadzenia algorytmu problemu komiwojażera.");
 
@@ -220,21 +209,27 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm() {
     TabuSearchAlgorithm algorithm(matrixOfCities, amountOfCities);
 
     //tabuListSize, maximumIterationsWithoutBetterSolution, maximumRestarts, cadence, maximumRestartsWithoutBetterSolution, inte
-
-    if (amountOfCities <= 30) {
-        algorithm.DoCalculations(13, 500, 400, 10, 4, true);
-        std::cout << "<=30" << std::endl;
-    } else if (amountOfCities > 30 && amountOfCities <= 150) {
-        algorithm.DoCalculations(13, 1000, 400, 10, 4, true);
-        std::cout << ">30 & <=150" << std::endl;
-    } else if (amountOfCities > 150 && amountOfCities <= 5000) {
-        algorithm.DoCalculations(13, 50, 30, 20, 3, true);
-        std::cout << ">150 & <=5000" << std::endl;
-    } else {
-        algorithm.DoCalculations(13, 50, 100, 10, 7, false);
-        std::cout << ">5000" << std::endl;
+    if (neighborhoodType=="auto") {
+        if (amountOfCities <= 30) {
+            algorithm.DoCalculations(13, 500, 400, 10, 4, true, "insert");
+        } else if (amountOfCities > 30 && amountOfCities <= 150) {
+            algorithm.DoCalculations(13, 1000, 400, 10, 4, true, "insert");
+        } else if (amountOfCities > 150 && amountOfCities <= 5000) {
+            algorithm.DoCalculations(13, 50, 30, 20, 3, true, "insert");
+        } else
+            algorithm.DoCalculations(13, 50, 100, 10, 7, false, "insert");
     }
-
+    else
+    {
+        if (amountOfCities <= 30) {
+            algorithm.DoCalculations(13, 500, 400, 10, 4, true, neighborhoodType);
+        } else if (amountOfCities > 30 && amountOfCities <= 150) {
+            algorithm.DoCalculations(13, 1000, 400, 10, 4, true, neighborhoodType);
+        } else if (amountOfCities > 150 && amountOfCities <= 5000) {
+            algorithm.DoCalculations(13, 3000, 200, 10, 4, true, neighborhoodType);
+        } else
+            algorithm.DoCalculations(13, 5000, 50, 10, 2, true, neighborhoodType);
+    }
     optimalWay = algorithm.GetResults().first;
     optimalLength = algorithm.GetResults().second;
     intermediateSolutions = algorithm.getIntermediateSolutions();
@@ -242,32 +237,29 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm() {
 
 void TravellingSalesmanProblem::PrintSolution() {
     std::cout << "\e[1mSolution\e[0m" << std::endl;
-    if (whichTypeOfAlgorithm == "brute_force") {
+    if (whichTypeOfAlgorithm == "brute_force")
         std::cout << "\e[1mFull Search Algorithm\e[0m" << std::endl;
-    } else if (whichTypeOfAlgorithm == "branch_and_bound") {
+    else if (whichTypeOfAlgorithm == "branch_and_bound")
         std::cout << "\e[1mBranch and Bound Algorithm\e[0m" << std::endl;
-    } else if (whichTypeOfAlgorithm == "tabu_search") {
+    else if (whichTypeOfAlgorithm == "tabu_search")
         std::cout << "\e[1mTabu Search Algorithm\e[0m" << std::endl;
-    }
 
     std::cout << "-------------------" << std::endl;
     std::cout << "Length\t= " << optimalLength << std::endl;
     std::cout << "Path\t= ";
 
     if (whichTypeOfAlgorithm == "brute_force") {
-        for (auto i = 0; i < amountOfCities; i++) {
+        for (auto i = 0; i < amountOfCities; i++)
             std::cout << optimalWay[i] << " - ";
-        }
         std::cout << optimalWay[0] << std::endl;
     } else if (whichTypeOfAlgorithm == "branch_and_bound") {
-        for (auto i = 0; i < amountOfCities; i++) {
+        for (auto i = 0; i < amountOfCities; i++)
             std::cout << optimalWay[i] - 1 << " - ";
-        }
         std::cout << optimalWay[0] - 1 << std::endl;
     } else if (whichTypeOfAlgorithm == "tabu_search") {
-        for (auto i = 0; i < amountOfCities; i++) {
+        for (auto i = 0; i < amountOfCities; i++)
             std::cout << optimalWay[i] << " - ";
-        }
+
         std::cout << optimalWay[0] << std::endl;
         std::cout << "-------------------" << std::endl;
         std::cout << "\e[1mIntermediate Solutions\e[0m" << std::endl;
