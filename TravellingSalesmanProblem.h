@@ -40,7 +40,7 @@ public:
 
     void DeleteTravellingSalesman();
 
-    void LoadArrayOfMatrixOfCities(long long int **_cities, int _amountOfCities,
+    void LoadArrayOfMatrixOfCities(int **_cities, int _amountOfCities,
                                    std::string _fileName, std::string _graphType);
 
     void ReadCitiesFromNormalFile(std::string path);

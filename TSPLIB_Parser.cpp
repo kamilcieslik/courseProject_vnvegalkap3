@@ -51,16 +51,17 @@ bool TSPLIB_Parser::readProblem(std::ifstream &inputFile) {
             std::stringstream stream(line);
             int n;
             while (stream >> n) {
-                this->numbers.push_back((long long int &&) n);
+                this->numbers.push_back(n);
             }
         }
         if (isCoordinatesType) {
             std::stringstream stream(line);
-            int n;
+            double n;
             stream >> n;
             while (stream >> n) {
-                this->numbers.push_back((long long int &&) n);
+                this->numbers.push_back((int) n);
             }
+
         }
         if (line == "EDGE_WEIGHT_SECTION") {
             isMatrixType = true;
@@ -134,9 +135,10 @@ bool TSPLIB_Parser::GenerateMatrix() {
             delete[] arrayOfMatrixCities[i];
         delete[] arrayOfMatrixCities;
     }
-    arrayOfMatrixCities = new long long int *[dimension];
+
+    arrayOfMatrixCities = new int *[dimension];
     for (auto i = 0; i < dimension; i++)
-        arrayOfMatrixCities[i] = new long long int[dimension];
+        arrayOfMatrixCities[i] = new int[dimension];
 
     if (edgeWeightType == "EUC_2D")
         EuclidesMatrix();
@@ -225,8 +227,7 @@ void TSPLIB_Parser::EuclidesMatrix() {
     int j = 0;
     for (auto k = 0; k < (2 * dimension); k = k + 2) {
         for (auto l = 0; l < (2 * dimension); l = l + 2) {
-
-            arrayOfMatrixCities[i][j] = (long long int) round(
+            arrayOfMatrixCities[i][j] = (int) round(
                     sqrt((numbers[k] - numbers[l]) * (numbers[k] - numbers[l]) +
                          (numbers[k + 1] - numbers[l + 1]) * (numbers[k + 1] - numbers[l + 1])));
             j++;
@@ -238,7 +239,7 @@ void TSPLIB_Parser::EuclidesMatrix() {
 
 void TSPLIB_Parser::PseudoEuclidesMatrix() {
     double rkl;
-    long long int tkl;
+    int tkl;
     int i = 0;
     int j = 0;
     for (auto k = 0; k < (2 * dimension); k = k + 2) {
@@ -246,7 +247,7 @@ void TSPLIB_Parser::PseudoEuclidesMatrix() {
 
             rkl = sqrt(((numbers[k] - numbers[l]) * (numbers[k] - numbers[l]) +
                         (numbers[k + 1] - numbers[l + 1]) * (numbers[k + 1] - numbers[l + 1])) / 10.0);
-            tkl = (long long int) round(rkl);
+            tkl = (int) round(rkl);
             if (tkl < rkl) arrayOfMatrixCities[i][j] = tkl + 1;
             else arrayOfMatrixCities[i][j] = tkl;
 
@@ -270,6 +271,6 @@ std::string TSPLIB_Parser::GetGraphType() {
     return type;
 }
 
-long long int **TSPLIB_Parser::GetArrayOfMatrixCities() {
+int **TSPLIB_Parser::GetArrayOfMatrixCities() {
     return arrayOfMatrixCities;
 }

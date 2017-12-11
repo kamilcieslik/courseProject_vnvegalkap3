@@ -15,12 +15,12 @@ private:
     std::string type;
     std::string edgeWeightType;
     std::string edgeWeightFormat;
-    std::vector<long long int> numbers;
+    std::vector<int> numbers;
     int dimension;
-    long long int **arrayOfMatrixCities;
+    int **arrayOfMatrixCities;
 
 public:
-    long long int** GetArrayOfMatrixCities();
+    int** GetArrayOfMatrixCities();
 
     int GetDimension();
 

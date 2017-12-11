@@ -23,7 +23,7 @@ void TravellingSalesmanProblem::DeleteTravellingSalesman() {
     matrixOfCities = nullptr;
 }
 
-void TravellingSalesmanProblem::LoadArrayOfMatrixOfCities(long long int **_cities, int _amountOfCities,
+void TravellingSalesmanProblem::LoadArrayOfMatrixOfCities(int **_cities, int _amountOfCities,
                                                           std::string _fileName, std::string _graphType) {
     randomGeneratorData = false;
     if (matrixOfCities != nullptr) {
@@ -224,7 +224,7 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborh
         } else if (amountOfCities > 30 && amountOfCities <= 150) {
             algorithm.DoCalculations(13, 1000, 400, 10, 4, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else if (amountOfCities > 150 && amountOfCities <= 5000) {
-            algorithm.DoCalculations(13, 3000, 200, 10, 4, neighborhoodType, showIntermediateSolutionsInRuntime);
+            algorithm.DoCalculations(13, 500, 200, 10, 4, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else
             algorithm.DoCalculations(13, 5000, 50, 10, 2, neighborhoodType, showIntermediateSolutionsInRuntime);
     }

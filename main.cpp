@@ -24,10 +24,10 @@ void menu_tabu_search_neighborhoodType(TravellingSalesmanProblem &s, bool showIn
     int option;
     do {
         std::cout << std::endl;
-        std::cout << "*** Rodzaj sąsiedztwa Tabu Search ***" << std::endl;
+        std::cout << "*** Wybór rodzaju sąsiedztwa ***" << std::endl;
         std::cout << "1. SWAP." << std::endl;
         std::cout << "2. INSERT." << std::endl;
-        std::cout << "2. INVERT." << std::endl;
+        std::cout << "3. INVERT." << std::endl;
         std::cout << "0. Powrót." << std::endl;
         std::cout << "Podaj opcje: ";
         std::cin >> option;
@@ -99,7 +99,7 @@ void menu_tabu_search_showIntermediateSolutions(TravellingSalesmanProblem &s) {
     int option;
     do {
         std::cout << std::endl;
-        std::cout << "*** Drukowanie cząstkowych wyników Tabu Search podczas wykonywania ***" << std::endl;
+        std::cout << "*** Wybór drukowania cząstkowych wyników podczas wykonywania algorytmu. ***" << std::endl;
         std::cout << "1. Tak." << std::endl;
         std::cout << "2. Nie." << std::endl;
         std::cout << "0. Powrót." << std::endl;
