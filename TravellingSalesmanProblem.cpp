@@ -199,7 +199,8 @@ void TravellingSalesmanProblem::PerformBranchAndBoundAlgorithm() {
     optimalLength = algorithm.GetResults().second;
 }
 
-void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborhoodType, bool showIntermediateSolutionsInRuntime) {
+void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborhoodType,
+                                                           bool showIntermediateSolutionsInRuntime) {
     if (matrixOfCities == nullptr)
         throw std::logic_error("Brak miast do przeprowadzenia algorytmu problemu komiwojażera.");
 
@@ -208,8 +209,7 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborh
 
     TabuSearchAlgorithm algorithm(matrixOfCities, amountOfCities);
 
-    //tabuListSize, maximumIterationsWithoutBetterSolution, maximumRestarts, cadence, maximumRestartsWithoutBetterSolution
-    if (neighborhoodType=="auto") {
+    if (neighborhoodType == "auto") {
         if (amountOfCities <= 30) {
             algorithm.DoCalculations(13, 500, 400, 10, 4, "insert");
         } else if (amountOfCities > 30 && amountOfCities <= 150) {
@@ -218,9 +218,7 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborh
             algorithm.DoCalculations(13, 50, 30, 20, 3, "insert");
         } else
             algorithm.DoCalculations(13, 50, 100, 10, 7, "insert");
-    }
-    else
-    {
+    } else {
         if (amountOfCities <= 30) {
             algorithm.DoCalculations(13, 500, 400, 10, 4, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else if (amountOfCities > 30 && amountOfCities <= 150) {
@@ -230,6 +228,7 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborh
         } else
             algorithm.DoCalculations(13, 5000, 50, 10, 2, neighborhoodType, showIntermediateSolutionsInRuntime);
     }
+
     optimalWay = algorithm.GetResults().first;
     optimalLength = algorithm.GetResults().second;
     intermediateSolutions = algorithm.getIntermediateSolutions();
@@ -275,7 +274,7 @@ void TravellingSalesmanProblem::PrintSolution() {
     }
 }
 
-int TravellingSalesmanProblem::GetTourLength() {
+long long int TravellingSalesmanProblem::GetTourLength() {
     return optimalLength;
 }
 

@@ -4,8 +4,8 @@
 #include "TravellingSalesmanProblem.h"
 #include "AlgorithmTest.h"
 
-void displayMenu(const std::string &info) //Menu dla problemu komiwojażera.
-{
+//Menu dla problemu komiwojażera.
+void displayMenu(const std::string &info) {
     std::cout << std::endl;
     std::cout << info << std::endl;
     std::cout << "1. Wczytaj z pliku TSPLIB." << std::endl;
@@ -19,7 +19,8 @@ void displayMenu(const std::string &info) //Menu dla problemu komiwojażera.
     std::cout << "Podaj opcje: ";
 }
 
-void menu_tabu_search_neighborhoodType(TravellingSalesmanProblem &s, bool showIntermediateSolutionsInRuntime){
+//Menu wyboru typu sąsiedztwa dla algorytmu z zakazami.
+void menu_tabu_search_neighborhoodType(TravellingSalesmanProblem &s, bool showIntermediateSolutionsInRuntime) {
     int option;
     do {
         std::cout << std::endl;
@@ -93,7 +94,8 @@ void menu_tabu_search_neighborhoodType(TravellingSalesmanProblem &s, bool showIn
     } while (option != 0);
 }
 
-void menu_tabu_search_showIntermediateSolutions(TravellingSalesmanProblem &s){
+//Menu wyboru czy wyświetlać cząstkowe wyniki podczas wykonywania algorytmu z zakazami.
+void menu_tabu_search_showIntermediateSolutions(TravellingSalesmanProblem &s) {
     int option;
     do {
         std::cout << std::endl;
@@ -120,8 +122,8 @@ void menu_tabu_search_showIntermediateSolutions(TravellingSalesmanProblem &s){
     } while (option != 0);
 }
 
-void menu_travelling_salesman_problem() //Obsługa problemu komiwojażera.
-{
+//Obsługa problemu komiwojażera.
+void menu_travelling_salesman_problem() {
     TravellingSalesmanProblem s;
     std::string path;
     int option;
@@ -217,10 +219,8 @@ void menu_travelling_salesman_problem() //Obsługa problemu komiwojażera.
     } while (option != 0);
 }
 
-
-
-void menu_tests() //Obsługa testów czasowych.
-{
+//Obsługa testów czasowych.
+void menu_tests() {
     AlgorithmTest test;
     int option;
     int numberOfRepetitions;

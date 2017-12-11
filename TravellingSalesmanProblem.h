@@ -58,7 +58,7 @@ public:
 
     void PrintSolution();
 
-    int GetTourLength();
+    long long int GetTourLength();
 };
 
 

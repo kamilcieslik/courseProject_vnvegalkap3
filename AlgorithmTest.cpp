@@ -80,7 +80,8 @@ void AlgorithmTest::TravellingSalesmanProblem_Test_BranchAndBound(int numberOfRe
     std::string path = "test/atsp/ftv33.atsp";
     std::ofstream file;
     file.open("test_atsp_branch_and_bound.txt", std::ios::out);
-    file << "Test czasów wykonywania algorytmu podziału i ograniczeń problemu komiwojażera z dnia - " << t.currentDateTime()
+    file << "Test czasów wykonywania algorytmu podziału i ograniczeń problemu komiwojażera z dnia - "
+         << t.currentDateTime()
          << ".\nDla każdego zestawu danych wyniki uśrednione z " << numberOfRepetitions
          << " losowych instancji." << std::endl << std::endl << std::endl;
 
@@ -110,12 +111,10 @@ void AlgorithmTest::TravellingSalesmanProblem_Test_BranchAndBound(int numberOfRe
         if (path == "test/atsp/ftv33.atsp") {
             path = "test/atsp/ftv35.atsp";
             amountOfCities = 35;
-        }
-        else if (path == "test/atsp/ftv35.atsp") {
+        } else if (path == "test/atsp/ftv35.atsp") {
             path = "test/atsp/ftv38.atsp";
             amountOfCities = 38;
-        }
-        else if (path == "test/atsp/ftv38.atsp") {
+        } else if (path == "test/atsp/ftv38.atsp") {
             path = "test/atsp/ftv44.atsp";
             amountOfCities = 44;
         }
