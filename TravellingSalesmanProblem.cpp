@@ -211,22 +211,22 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborh
 
     if (neighborhoodType == "auto") {
         if (amountOfCities <= 30) {
-            algorithm.DoCalculations(13, 500, 400, 10, 4, "insert");
+            algorithm.DoCalculations(13, 500, 30, 10, "insert");
         } else if (amountOfCities > 30 && amountOfCities <= 150) {
-            algorithm.DoCalculations(13, 1000, 400, 10, 4, "insert");
+            algorithm.DoCalculations(13, 1000, 400, 10, "insert");
         } else if (amountOfCities > 150 && amountOfCities <= 5000) {
-            algorithm.DoCalculations(13, 50, 30, 20, 3, "insert");
+            algorithm.DoCalculations(13, 50, 30, 20, "insert");
         } else
-            algorithm.DoCalculations(13, 50, 100, 10, 7, "insert");
+            algorithm.DoCalculations(13, 50, 100, 10, "insert");
     } else {
         if (amountOfCities <= 30) {
-            algorithm.DoCalculations(13, 500, 400, 10, 4, neighborhoodType, showIntermediateSolutionsInRuntime);
+            algorithm.DoCalculations(13, 1000, 50, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else if (amountOfCities > 30 && amountOfCities <= 150) {
-            algorithm.DoCalculations(13, 1000, 400, 10, 4, neighborhoodType, showIntermediateSolutionsInRuntime);
+            algorithm.DoCalculations(13, 1000, 50, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else if (amountOfCities > 150 && amountOfCities <= 5000) {
-            algorithm.DoCalculations(13, 500, 200, 10, 4, neighborhoodType, showIntermediateSolutionsInRuntime);
+            algorithm.DoCalculations(13, 1000, 50, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else
-            algorithm.DoCalculations(13, 5000, 50, 10, 2, neighborhoodType, showIntermediateSolutionsInRuntime);
+            algorithm.DoCalculations(13, 1000, 50, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
     }
 
     optimalWay = algorithm.GetResults().first;

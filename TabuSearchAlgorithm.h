@@ -24,8 +24,8 @@ public:
 
     void DoCalculations(int tabuListSize = 13,
                         int maximumIterationsWithoutBetterSolution = 1000,
-                        int maximumRestarts = 200, int tenure = 10, int maximumRestartsWithoutBetterSolution = 4,
-                        std::string neighborhoodType = "insert", bool showIntermediateSolutionsInRuntime = false);
+                        int maximumRestarts = 200, int tenure = 10, std::string neighborhoodType = "insert",
+                        bool showIntermediateSolutionsInRuntime = false);
 
     std::pair<std::vector<int>, int> GetResults();
 
@@ -37,14 +37,17 @@ private:
     std::vector<int> generateRandomSolution();
 
     bool
-    citiesDoNotExistOnTabuList(std::pair<int, int> &neighborhoodCities, std::vector<int> &tempSolution,
-                               long long int neighborhoodCost);
+    citiesExistOnTabuList(std::pair<int, int> &neighborhoodCities,
+                          long long int neighborhoodCost);
 
-    long long int countCost(std::vector<int> currentSolution);
+    int countCost(std::vector<int> currentSolution);
 
     bool CriticalEvent(int &iterationsWithoutBetterSolution, int &maximumIterationsWithoutBetterSolution);
 
-    void Restart(std::vector<int> &currentSolution, long long int &currentCost);
+    void Intensification(std::vector<int> &currentSolution, long long int &currentCost,
+                         std::list<std::vector<int>> &goodSolutions);
+
+    void Diversification(std::vector<int> &currentSolution, long long int &currentCost);
 
     std::list<std::pair<int, int>> findRandomCitiesToNeighbourhood(std::vector<int> &currentSolution,
                                                                    int neighbourhoodSize);
@@ -57,11 +60,11 @@ private:
 
     void decrementTenures(std::list<std::pair<std::pair<int, int>, int>> &tabuList);
 
-    void neighbourBySwap(std::vector<int> &tempSolution, long city_1, long city_2);
+    void neighbourBySwap(std::vector<int> &tempSolution, long city_1Position, long city_2Position);
 
-    void neighbourByInsert(std::vector<int> &tempSolution, long city_1, long city_2);
+    void neighbourByInsert(std::vector<int> &tempSolution, long city_1Position, long city_2Position);
 
-    void neighbourByInvert(std::vector<int> &tempSolution, long city_1, long city_2);
+    void neighbourByInvert(std::vector<int> &tempSolution, long city_1Position, long city_2Position);
 };
 
 
