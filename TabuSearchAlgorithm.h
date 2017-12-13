@@ -53,10 +53,10 @@ private:
                                                                    int neighbourhoodSize);
 
     std::vector<int>
-    GenerateBestNewCurrentSolutionFromNeighbourhood(std::vector<int> currentSolution,
-                                                    std::list<std::pair<int, int>> neighbours,
-                                                    std::pair<int, int> neighborhoodCities,
-                                                    std::string neighborhoodType);
+    GenerateNewCurrentSolutionFromNeighbourhood(std::vector<int> currentSolution,
+                                                std::list<std::pair<int, int>> listOfReplacedCities,
+                                                std::pair<int, int> replacedCitiesOfBestNeighbour,
+                                                std::string neighborhoodType);
 
     void decrementTenures(std::list<std::pair<std::pair<int, int>, int>> &tabuList);
 
