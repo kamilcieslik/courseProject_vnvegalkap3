@@ -229,6 +229,7 @@ void menu_tests() {
         std::cout << "*** Testy czasowe ***" << std::endl;
         std::cout << "1. Testy czasowe dla algorytmu przeglądu zupełnego problemu komiwojażera." << std::endl;
         std::cout << "2. Testy czasowe dla algorytmu podziału i ograniczeń problemu komiwojażera." << std::endl;
+        std::cout << "3. Testy czasowe dla poszukiwania lokalnego z zakazami problemu komiwojażera." << std::endl;
         std::cout << "0. Powrót do menu." << std::endl;
         std::cout << "Podaj opcje: ";
         std::cin >> option;
@@ -244,6 +245,12 @@ void menu_tests() {
                 std::cout << "Podaj ilość instancji każdego zestawu danych w celu uśrednienia wyniku: ";
                 std::cin >> numberOfRepetitions;
                 test.TravellingSalesmanProblem_Test_BranchAndBound(numberOfRepetitions);
+                break;
+
+            case 3: //Testy czasowe dla algorytmu Tabu Search problemu komiwojażera.
+                std::cout << "Podaj ilość instancji każdego zestawu danych w celu uśrednienia wyniku: ";
+                std::cin >> numberOfRepetitions;
+                test.TravellingSalesmanProblem_Test_TabuSearch(numberOfRepetitions);
                 break;
 
             default:

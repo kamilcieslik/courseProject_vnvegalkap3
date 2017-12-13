@@ -54,11 +54,13 @@ public:
     void PerformBranchAndBoundAlgorithm();
 
     void
-    PerformTabuSearchAlgorithm(std::string neighborhoodType = "auto", bool showIntermediateSolutionsInRuntime = false);
+    PerformTabuSearchAlgorithm(std::string neighborhoodType = "auto", bool showIntermediateSolutionsInRuntime = false, int tabuSize = 13);
 
     void PrintSolution();
 
     long long int GetTourLength();
+
+    const std::vector<IntermediateSolutionOfTheTabuSearchAlgorithm> &getIntermediateSolutions() const;
 };
 
 

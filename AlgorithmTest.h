@@ -15,6 +15,8 @@ public:
     void TravellingSalesmanProblem_Test_BruteForce(int numberOfRepetitions);
 
     void TravellingSalesmanProblem_Test_BranchAndBound(int numberOfRepetitions);
+
+    void TravellingSalesmanProblem_Test_TabuSearch(int numberOfRepetitions);
 };
 
 

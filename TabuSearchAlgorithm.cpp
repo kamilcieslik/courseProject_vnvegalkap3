@@ -44,7 +44,7 @@ void TabuSearchAlgorithm::DoCalculations(int tabuListSize,
     std::pair<int, int> replacedCities;
     std::list<std::vector<int>> goodSolutions;
 
-    while (amountOfRestarts < maximumRestarts && timeMeasurement.GetTimeInSeconds() < 120) {
+    while (amountOfRestarts < maximumRestarts && timeMeasurement.GetTimeInSeconds() < 100) {
         std::list<std::pair<int, int>> neighbourhood = findRandomCitiesToNeighbourhood(currentSolution,
                                                                                        amountOfNeighbours);
 

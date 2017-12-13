@@ -200,7 +200,7 @@ void TravellingSalesmanProblem::PerformBranchAndBoundAlgorithm() {
 }
 
 void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborhoodType,
-                                                           bool showIntermediateSolutionsInRuntime) {
+                                                           bool showIntermediateSolutionsInRuntime, int tabuSize) {
     if (matrixOfCities == nullptr)
         throw std::logic_error("Brak miast do przeprowadzenia algorytmu problemu komiwojażera.");
 
@@ -220,13 +220,13 @@ void TravellingSalesmanProblem::PerformTabuSearchAlgorithm(std::string neighborh
             algorithm.DoCalculations(13, 50, 100, 10, "insert");
     } else {
         if (amountOfCities <= 30) {
-            algorithm.DoCalculations(13, 1000, 50, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
+            algorithm.DoCalculations(tabuSize, 1000, 50, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else if (amountOfCities > 30 && amountOfCities <= 150) {
-            algorithm.DoCalculations(13, 1000, 50, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
+            algorithm.DoCalculations(tabuSize, 1000, 50, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else if (amountOfCities > 150 && amountOfCities <= 5000) {
-            algorithm.DoCalculations(13, 1000, 50, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
+            algorithm.DoCalculations(tabuSize, 1000, 50, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
         } else
-            algorithm.DoCalculations(13, 1000, 50, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
+            algorithm.DoCalculations(tabuSize, 2000, 70, 10, neighborhoodType, showIntermediateSolutionsInRuntime);
     }
 
     optimalWay = algorithm.GetResults().first;
@@ -276,5 +276,10 @@ void TravellingSalesmanProblem::PrintSolution() {
 
 long long int TravellingSalesmanProblem::GetTourLength() {
     return optimalLength;
+}
+
+const std::vector<IntermediateSolutionOfTheTabuSearchAlgorithm> &
+TravellingSalesmanProblem::getIntermediateSolutions() const {
+    return intermediateSolutions;
 }
 

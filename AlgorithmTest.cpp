@@ -120,7 +120,7 @@ void AlgorithmTest::TravellingSalesmanProblem_Test_BranchAndBound(int numberOfRe
         }
     }
 
-    file << "Il_miast\tPodziały_i_ograniczenia\tDługość\n";
+    file << "Il_miast\tTabuSearch\tDługość\n";
     for (int i = 0; i < results.size(); i++) {
         file << results[i] << "\t";
         if (((i + 1) % 3) == 0) {
@@ -131,5 +131,58 @@ void AlgorithmTest::TravellingSalesmanProblem_Test_BranchAndBound(int numberOfRe
     file << std::endl << std::endl << "Czas zakończenia testów - " << t.currentDateTime() << "." << std::endl;
     file.close();
     std::cout << "Test zakończony pomyślnie." << std::endl << std::endl;
+}
+
+void AlgorithmTest::TravellingSalesmanProblem_Test_TabuSearch(int numberOfRepetitions) {
+    TravellingSalesmanProblem s;
+    std::vector<double> results;
+    double sumTime = 0;
+    double sumPath = 0;
+    int tabuSize = 5;
+    std::string path = "tests/tsp/fl1400.atsp";
+    std::ofstream file;
+    file.open("results/tsp/test_fl1400tsp_tabu_invert_tabusize5_8_11_14_17_20.txt", std::ios::out);
+
+    for (auto i = 0; i < 6; i++) {
+        results.push_back((double &&) tabuSize);
+        sumTime = 0;
+        sumPath=0;
+
+        for (auto j = 0; j < numberOfRepetitions; j++) {
+
+            TSPLIB_Parser parser(path);
+            s.LoadArrayOfMatrixOfCities(parser.GetArrayOfMatrixCities(), parser.GetDimension(),
+                                        parser.GetFileName(), parser.GetGraphType());
+            s.PerformTabuSearchAlgorithm("invert", false, tabuSize);
+            sumTime+=s.getIntermediateSolutions().back().getTimeFromTheBeginningOfTheAlgorithm();
+            sumPath+=s.getIntermediateSolutions().back().getActualResult();
+        }
+        sumTime = sumTime / numberOfRepetitions;
+        sumPath = sumPath / numberOfRepetitions;
+        results.push_back(sumTime);
+        results.push_back(sumPath);
+
+        std::cout << "." << std::endl << std::endl;
+
+        if (tabuSize == 5) {
+            tabuSize = 8;
+        } else if (tabuSize == 8) {
+            tabuSize = 11;
+        } else if (tabuSize == 11) {
+            tabuSize = 14;
+        } else if (tabuSize == 14) {
+            tabuSize = 17;
+        } else if (tabuSize == 17) {
+            tabuSize = 20;
+        }
+    }
+
+    file << "Rozm_tabu\tCzas\tDługość\n";
+    for (int i = 0; i < results.size(); i++) {
+        file << results[i] << "\t";
+        if (((i + 1) % 3) == 0) {
+            file << "\n";
+        }
+    }
 }
 
